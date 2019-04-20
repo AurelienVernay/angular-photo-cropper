@@ -62,12 +62,12 @@ export class AppComponent {
     }
 
     public rotateLeft() {
-        this.rotate(-90);
+        this.rotate(270, 'left');
     }
     public rotateRight() {
-        this.rotate(90);
+        this.rotate(90, 'right');
     }
-    private rotate(angle: number) {
+    private rotate(angle: number, direction: 'left' | 'right') {
         const canvas = document.getElementById(
             'picture-canvas'
         ) as HTMLCanvasElement;
@@ -76,13 +76,16 @@ export class AppComponent {
         const image = new Image();
         image.addEventListener('load', () => {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.translate(image.width, image.height);
-            // context.rotate(180 * (Math.PI / 180));
-            ctx.rotate(angle);
-            ctx.drawImage(image, 0, 0);
             const tmp = canvas.width;
             canvas.width = canvas.height;
             canvas.height = tmp;
+            ctx.translate(
+                direction === 'right' ? image.height : 0,
+                direction === 'right' ? 0 : image.width
+            );
+            // context.rotate(180 * (Math.PI / 180));
+            ctx.rotate((angle * Math.PI) / 180);
+            ctx.drawImage(image, 0, 0);
         });
         image.src = dataURL;
     }
