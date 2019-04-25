@@ -1,0 +1,59 @@
+<h2>Choix de la source</h2>
+<p>Choississez la source d'importation de l'image :</p>
+<mat-button-toggle-group #group="matButtonToggleGroup" [(ngModel)]="loadMethod">
+    <mat-button-toggle value="file">
+        <mat-icon>photo</mat-icon> Depuis un fichier
+    </mat-button-toggle>
+    <mat-button-toggle value="link">
+        <mat-icon>link</mat-icon> Depuis une URL
+    </mat-button-toggle>
+</mat-button-toggle-group>
+<div [ngSwitch]="loadMethod">
+    <ng-container *ngSwitchCase="'file'">
+        <div class="padding">
+            <p>
+                Cliquez sur le bouton suivant pour télécharger une image de
+                votre ordinateur :
+            </p>
+            <button mat-raised-button color="primary" (click)="loadPicture()">
+                <mat-icon>photo</mat-icon> Charger une image
+            </button>
+        </div>
+    </ng-container>
+    <ng-container *ngSwitchCase="'link'">
+        <form
+            class="padding"
+            [formGroup]="fg"
+            fxLayout="column"
+            fxLayoutAlign="space-between center"
+            fxLayoutGap="1em"
+        >
+            <p>
+                Saisissez une URL dirigeant vers une image dans le champ
+                ci-dessous, et cliquer sur le bouton <em>Charger</em> :
+            </p>
+            <mat-form-field class="full-width">
+                <mat-label>URL de l'image</mat-label>
+                <input type="url" matInput formControlName="link" />
+                <mat-error *ngIf="fg.controls['link'].invalid">{{
+                    getErrorMessage()
+                }}</mat-error>
+            </mat-form-field>
+            <button
+                [disabled]="!fg.valid"
+                mat-raised-button
+                color="primary"
+                type="submit"
+                (click)="onUploadByLink()"
+            >
+                <mat-icon>cloud_upload</mat-icon> Charger
+            </button>
+        </form>
+    </ng-container>
+</div>
+<input
+    id="fileInput"
+    type="file"
+    accept=".jpeg, .png, .gif, image/gif, image/png, image/jpeg"
+    (change)="onFileUploaded($event)"
+/>

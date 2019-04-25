@@ -14,6 +14,7 @@
 
 <div
     id="main-container"
+    class="mat-app-background"
     fxLayout="column"
     fxLayoutAlign="space-between center"
     fxLayoutGap="1em"
@@ -23,86 +24,51 @@
     </a>
     <h1>Exemple d'application web : <em>Photo Cropper</em></h1>
     <p>
-        Utilisez l'interface pour charger une image et la redécouper selon vos
-        besoins. Une fois l'image prête, appyuez sur <em>Enregistrer</em> pour
-        sauvegarder une copie sur votre ordinateur.
+        Utilisez l'interface pour charger une image et l'éditer selon vos
+        besoins. Une fois l'image prête,vous pouvez la sauvegarder sur votre
+        ordinateur à l'aide du bouton <em>Enregistrer</em>
+        <mat-icon>save</mat-icon>
     </p>
-    <input
-        id="fileInput"
-        type="file"
-        accept=".jpeg, .png, .gif, image/gif, image/png, image/jpeg"
-        (change)="onFileUploaded($event)"
-    />
-    <mat-toolbar
-        color="accent"
-        fxLayout="row"
-        fxLayoutAlign="space-around center"
-    >
-        <button mat-raised-button color="primary" (click)="loadPicture()">
-            <mat-icon>photo</mat-icon> Charger une image
-        </button>
-        <div
-            *ngIf="pictureLoaded"
-            fxLayout="row"
-            fxLayoutAlign="space-between center"
-            fxLayoutGap="1em"
-        >
-            <mat-form-field>
-                <input
-                    matInput
-                    type="text"
-                    [(ngModel)]="filename"
-                    placeholder="Nom du fichier"
-                />
-            </mat-form-field>
-            <button
-                mat-raised-button
-                color="primary"
-                (click)="rotateLeft()"
-                matTooltip="Retourner vers la gauche (90°)"
-            >
-                <mat-icon>rotate_left</mat-icon>
-            </button>
-            <button
-                mat-raised-button
-                color="primary"
-                (click)="rotateRight()"
-                matTooltip="Retourner vers la droite (90°)"
-            >
-                <mat-icon>rotate_right</mat-icon>
-            </button>
-            <button
-                mat-raised-button
-                color="primary"
-                (click)="toggleCropping()"
-                matTooltip="Découper"
-            >
-                <mat-icon>crop</mat-icon>
-            </button>
-            <button
-                mat-raised-button
-                color="primary"
-                (click)="saveFile()"
-                matTooltip="Enregistrer"
-            >
-                <mat-icon>save</mat-icon>
-            </button>
-        </div>
-    </mat-toolbar>
+    <app-picture-loader
+        *ngIf="!pictureLoaded; else drawingTemplate"
+        (loading)="onLoading()"
+        (loaded)="onLoaded()"
+    ></app-picture-loader>
+    <mat-spinner *ngIf="pictureLoading"></mat-spinner>
 
-    <canvas [fxShow]="pictureLoaded" id="picture-canvas"></canvas>
+    <ng-template #drawingTemplate>
+        <app-toolbar
+            class="full-width"
+            [(cropping)]="cropping"
+            (rotate)="onRotate($event)"
+            (saveFile)="onSaveFile($event)"
+        ></app-toolbar>
+    </ng-template>
+    <div id="drawing-zone">
+        <div id="cropper-overlay" [fxShow]="cropping">
+            <div
+                [ngStyle]="{
+                    width: cropWrapperDimensions.width + 'px',
+                    height: cropWrapperDimensions.height + 'px'
+                }"
+                id="crop-wrapper"
+                cdkDrag
+                [cdkDragDisabled]="!cropping"
+                [cdkDragBoundary]="cropping ? '#drawing-zone' : null"
+                (mousedown)="dragStarted($event)"
+            >
+                <div class="ne"></div>
+                <div class="nw"></div>
+                <div class="se"></div>
+                <div class="sw"></div>
+            </div>
+        </div>
+        <canvas [fxShow]="pictureLoaded" id="picture-canvas"></canvas>
+    </div>
+    <button *ngIf="cropping" mat-raised-button (click)="crop()">
+        <mat-icon>crop</mat-icon>Recadrer
+    </button>
 
     <a id="download-anchor" [download]="filename"></a>
-    <p>
-        Cette application a été réalisée avec le framework
-        <a href="https://angular.io">Angular</a>, ainsi que les bibliothèques UI
-        <a href="https://github.com/angular/flex-layout">Angular Flex Layout</a>
-        et <a href="https://material.angular.io">Angular Material</a>.
-    </p>
-    <div class="footer text-muted">
-        <img src="./assets/logo-mini.svg" height="32" />
-        2019 - Fait par Aurélien VERNAY (visitez mon
-        <a href="https://aurelienvernay.github.io">site web</a> pour en savoir
-        plus)
-    </div>
+    <app-footer class="full-width"></app-footer>
 </div>

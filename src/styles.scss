@@ -1,5 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
-@import '~@angular/material/prebuilt-themes/pink-bluegrey.css';
+@import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
 
 html,
 body {
@@ -16,4 +16,20 @@ a {
     color: #007bff;
     text-decoration: none;
     background-color: transparent;
+}
+
+p {
+    display: block;
+    margin-block-start: 0em;
+    margin-block-end: 1em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+}
+
+.full-width {
+    width: 100%;
+}
+
+.padding {
+    padding: 1em;
 }

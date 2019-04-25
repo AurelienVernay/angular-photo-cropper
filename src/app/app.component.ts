@@ -1,73 +1,118 @@
 import { Component } from '@angular/core';
-
+/**
+ * @class AppComponent
+ * Central logic of the app - picture editing and exporting happens here
+ */
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
+    /**
+     * @name PictureLoaded
+     * Indicates when the picture has been loaded into canvas.
+     * @type boolean
+     */
     public pictureLoaded = false;
-    public filename = 'Untitled picture';
-    loadPicture() {
-        this.pictureLoaded = false;
-        document.getElementById('fileInput').click();
-    }
 
-    onFileUploaded(event) {
-        const file = event.srcElement.files.item(0);
-        const canvas = <HTMLCanvasElement>(
-            document.getElementById('picture-canvas')
-        );
-        const mainContainer = document.getElementById('main-container');
-        const context = canvas.getContext('2d');
-        if (file) {
-            const FR = new FileReader();
-            FR.onload = e => {
-                var img = new Image();
-                img.addEventListener('load', () => {
-                    let ratio = 1;
-                    canvas.width = img.width;
-                    canvas.height = img.height;
-                    if (
-                        img.width > mainContainer.clientWidth ||
-                        img.height > mainContainer.clientHeight
-                    ) {
-                        const heightRatio =
-                            mainContainer.clientHeight / img.height;
-                        const widthRatio =
-                            (mainContainer.clientWidth - 20) / img.width;
-                        ratio =
-                            heightRatio < widthRatio ? heightRatio : widthRatio;
-                        canvas.width = img.width * ratio;
-                        canvas.height = img.height * ratio;
-                    }
-                    context.scale(ratio, ratio);
-                    context.drawImage(img, 0, 0);
-                    this.pictureLoaded = true;
-                });
-                const target: any = e.target;
-                img.src = target.result;
-            };
-            FR.readAsDataURL(file);
+    /**
+     * @name PictureLoading
+     * Indicates when the picture is being loaded into canvas.
+     * @type boolean
+     */
+    public pictureLoading = false;
+
+    /**
+     * @name cropWrapperDimensions
+     * Sets width and height of cropper
+     */
+    public cropWrapperDimensions: { height: number; width: number } = {
+        height: 0,
+        width: 0,
+    };
+
+    /**
+     * getter and setter for cropping - ensures that the cropper is being resized everytime the crop is on
+     */
+    private _cropping = false;
+    public get cropping() {
+        return this._cropping;
+    }
+    public set cropping(value: boolean) {
+        this._cropping = value;
+        if (value) {
+            // enable cropping - compute cropper width and height based on canvas size
+            const canvas = document.getElementById('picture-canvas');
+            this.cropWrapperDimensions.width = 0.75 * canvas.clientWidth;
+            this.cropWrapperDimensions.height = 0.75 * canvas.clientHeight;
         }
     }
 
-    public saveFile() {
-        const anchor = document.getElementById('download-anchor');
-        const image = document.getElementById(
-            'picture-canvas'
-        ) as HTMLCanvasElement;
-        anchor.setAttribute('href', image.toDataURL('image/png'));
-        anchor.click();
+    /**
+     * @method onLoading
+     * responding to event to set values of loading and loaded
+     */
+    onLoading() {
+        this.pictureLoaded = false;
+        this.pictureLoading = true;
     }
 
-    public rotateLeft() {
-        this.rotate(270, 'left');
+    /**
+     * @method onLoaded
+     * responding to event to set values of loading and loaded
+     */
+    onLoaded() {
+        this.pictureLoaded = true;
+        this.pictureLoading = false;
     }
-    public rotateRight() {
-        this.rotate(90, 'right');
+
+    /**
+     * @method crop
+     * Crops image inside cropper frame and draw into canvas
+     */
+    public crop() {
+        const cropWrapper = document.getElementById('crop-wrapper');
+        const canvas = document.getElementById(
+            'picture-canvas'
+        ) as HTMLCanvasElement;
+        const ctx = canvas.getContext('2d');
+        console.log(cropWrapper.style.transform);
+        const coords = cropWrapper.style.transform
+            .replace('translate3d(', '')
+            .replace(')', '')
+            .replace(/px/gi, '')
+            .split(',');
+        console.log(coords);
+        const imageData = ctx.getImageData(
+            parseInt(coords[0]),
+            parseInt(coords[1]),
+            cropWrapper.clientWidth,
+            cropWrapper.clientHeight
+        );
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        canvas.width = cropWrapper.clientWidth;
+        canvas.height = cropWrapper.clientHeight;
+        ctx.putImageData(imageData, 0, 0);
+        this.cropping = false;
     }
+
+    /**
+     * @method onRotate
+     * responding to event to rotate picture
+     */
+    public onRotate(direction: 'left' | 'right') {
+        this.rotate(direction === 'left' ? 270 : 90, direction);
+    }
+
+    /**
+     * @method rotate
+     * Rotates the picture into canvas
+     * @param angle
+     * @param direction
+     */
     private rotate(angle: number, direction: 'left' | 'right') {
+        this.pictureLoading = true;
         const canvas = document.getElementById(
             'picture-canvas'
         ) as HTMLCanvasElement;
@@ -83,10 +128,25 @@ export class AppComponent {
                 direction === 'right' ? image.height : 0,
                 direction === 'right' ? 0 : image.width
             );
-            // context.rotate(180 * (Math.PI / 180));
             ctx.rotate((angle * Math.PI) / 180);
             ctx.drawImage(image, 0, 0);
+            this.pictureLoading = false;
         });
         image.src = dataURL;
+    }
+
+    /**
+     * @method onSaveFile
+     * Saves the picture into a file
+     * @param filename the name of the file downloaded
+     */
+    public onSaveFile(filename: string) {
+        const anchor = document.getElementById('download-anchor');
+        const image = document.getElementById(
+            'picture-canvas'
+        ) as HTMLCanvasElement;
+        anchor.setAttribute('download', filename);
+        anchor.setAttribute('href', image.toDataURL('image/png'));
+        anchor.click();
     }
 }
