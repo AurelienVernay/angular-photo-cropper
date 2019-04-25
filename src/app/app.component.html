@@ -42,6 +42,7 @@
             [(cropping)]="cropping"
             (rotate)="onRotate($event)"
             (saveFile)="onSaveFile($event)"
+            [loading]="pictureLoading"
         ></app-toolbar>
     </ng-template>
     <div id="drawing-zone">
@@ -55,7 +56,6 @@
                 cdkDrag
                 [cdkDragDisabled]="!cropping"
                 [cdkDragBoundary]="cropping ? '#drawing-zone' : null"
-                (mousedown)="dragStarted($event)"
             >
                 <div class="ne"></div>
                 <div class="nw"></div>
@@ -69,6 +69,6 @@
         <mat-icon>crop</mat-icon>Recadrer
     </button>
 
-    <a id="download-anchor" [download]="filename"></a>
+    <a id="download-anchor" download="Image sans titre"></a>
     <app-footer class="full-width"></app-footer>
 </div>

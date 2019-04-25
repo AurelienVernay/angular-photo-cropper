@@ -14,7 +14,7 @@ export class ToolbarComponent {
      * @type boolean
      */
     @Input() public cropping = false;
-
+    @Input() public loading = false;
     /**
      * Event fired when the boolean changes value - used for 2-way data-binding
      * @type EventEmitter
