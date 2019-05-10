@@ -3,12 +3,11 @@
     class="full-width"
     (toggleCrop)="onToggleCrop()"
     (rotate)="onRotate($event)"
-    (saveFile)="onSaveFile($event)"
+    (saveFile)="onSaveFile()"
     (zoom)="onZoom($event)"
     (resetZoom)="onResetZoom()"
     (closeFile)="onCloseFile()"
     (copyToClipboard)="onCopyToClipboard()"
-    [loading]="pictureLoading"
 ></app-toolbar>
 <div
     class="container"

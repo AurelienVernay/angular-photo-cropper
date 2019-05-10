@@ -10,11 +10,6 @@ import { Component, Output, EventEmitter, Input } from '@angular/core';
 })
 export class ToolbarComponent {
     /**
-     * Input for cropping - in order to keep the same state between appComponent and this one
-     * @type boolean
-     */
-    @Input() public loading = false;
-    /**
      * Event fired when the boolean changes value - used for 2-way data-binding
      * @type EventEmitter
      */

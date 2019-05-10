@@ -35,7 +35,6 @@
                 color="primary"
                 (click)="clickZoomOut()"
                 matTooltip="Dézoomer"
-                [disabled]="loading"
             >
                 <mat-icon>zoom_out</mat-icon>
             </button>
@@ -44,7 +43,6 @@
                 color="primary"
                 (click)="clickZoomIn()"
                 matTooltip="Zoomer"
-                [disabled]="loading"
             >
                 <mat-icon>zoom_in</mat-icon>
             </button>
@@ -53,7 +51,6 @@
                 color="primary"
                 (click)="clickResetZoom()"
                 matTooltip="Revenir au zoom initial"
-                [disabled]="loading"
             >
                 <mat-icon>pageview</mat-icon>
             </button>
@@ -62,7 +59,6 @@
                 color="primary"
                 (click)="rotateLeft()"
                 matTooltip="Retourner vers la gauche (90°)"
-                [disabled]="loading"
             >
                 <mat-icon>rotate_left</mat-icon>
             </button>
@@ -71,7 +67,6 @@
                 color="primary"
                 (click)="rotateRight()"
                 matTooltip="Retourner vers la droite (90°)"
-                [disabled]="loading"
             >
                 <mat-icon>rotate_right</mat-icon>
             </button>
