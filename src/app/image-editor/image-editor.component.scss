@@ -1,0 +1,15 @@
+.container {
+    margin: 1em !important;
+}
+
+#picture {
+    max-width: 100%;
+}
+#confirm-crop {
+    position: relative;
+    top: -3em;
+    z-index: 999;
+}
+#download-anchor {
+    display: none;
+}

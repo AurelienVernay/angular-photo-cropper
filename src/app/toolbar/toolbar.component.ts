@@ -13,19 +13,18 @@ export class ToolbarComponent {
      * Input for cropping - in order to keep the same state between appComponent and this one
      * @type boolean
      */
-    @Input() public cropping = false;
     @Input() public loading = false;
     /**
      * Event fired when the boolean changes value - used for 2-way data-binding
      * @type EventEmitter
      */
-    @Output() croppingChange = new EventEmitter<boolean>();
+    @Output() toggleCrop = new EventEmitter();
 
     /**
      * Event fired when user wants to rotate picture
      * @type EventEmitter
      */
-    @Output() rotate = new EventEmitter<string>();
+    @Output() rotate = new EventEmitter<number>();
 
     /**
      * Event fired when user wants to save picture into file (export)
@@ -34,6 +33,13 @@ export class ToolbarComponent {
 
     @Output() saveFile = new EventEmitter<string>();
 
+    @Output() zoom = new EventEmitter<number>();
+
+    @Output() resetZoom = new EventEmitter();
+
+    @Output() closeFile = new EventEmitter();
+
+    @Output() copyToClipboard = new EventEmitter();
     /**
      * name of exported file
      * @type string
@@ -47,7 +53,7 @@ export class ToolbarComponent {
      * @method toggleCropping
      */
     toggleCropping() {
-        this.croppingChange.emit(!this.cropping);
+        this.toggleCrop.emit();
     }
 
     /**
@@ -55,7 +61,7 @@ export class ToolbarComponent {
      * @method rotateLeft
      */
     public rotateLeft() {
-        this.rotate.emit('left');
+        this.rotate.emit(-90);
     }
 
     /**
@@ -63,7 +69,7 @@ export class ToolbarComponent {
      * @method rotateRight
      */
     public rotateRight() {
-        this.rotate.emit('right');
+        this.rotate.emit(90);
     }
 
     /**
@@ -72,5 +78,33 @@ export class ToolbarComponent {
      */
     public save() {
         this.saveFile.emit(this.filename);
+    }
+
+    /**
+     *
+     */
+    public clickZoomIn() {
+        this.zoom.emit(0.1);
+    }
+
+    /**
+     *
+     */
+    public clickZoomOut() {
+        this.zoom.emit(-0.1);
+    }
+
+    public clickResetZoom() {
+        this.resetZoom.emit();
+    }
+    public clickSave() {
+        this.saveFile.emit(this.filename);
+    }
+
+    public clickClose() {
+        this.closeFile.emit();
+    }
+    public clickCopy() {
+        this.copyToClipboard.emit();
     }
 }

@@ -25,7 +25,7 @@ export class PictureLoaderComponent {
     /**
      * Event emitter used to tell app that content is loaded
      */
-    @Output() loaded = new EventEmitter();
+    @Output() pictureLoaded = new EventEmitter();
 
     /**
      * regex used to restrain user input to links (URLs)
@@ -65,7 +65,7 @@ export class PictureLoaderComponent {
             this.loading.emit(true);
             const FR = new FileReader();
             FR.onload = (e: any) => {
-                this.drawImage(e.target.result);
+                this.pictureLoaded.emit(e.target.result);
             };
             FR.readAsDataURL(file);
         }
@@ -87,7 +87,7 @@ export class PictureLoaderComponent {
      * loads picture by URL input
      */
     onUploadByLink() {
-        this.drawImage(this.fg.get('link').value);
+        this.pictureLoaded.emit(this.fg.get('link').value);
     }
     /**
      * @method drawImage
@@ -95,31 +95,9 @@ export class PictureLoaderComponent {
      * @param source the source of the image to draw
      */
     private drawImage(source: string) {
-        const canvas = <HTMLCanvasElement>(
-            document.getElementById('picture-canvas')
-        );
-        const mainContainer = document.getElementById('main-container');
-        const context = canvas.getContext('2d');
         const img = new Image();
         img.crossOrigin = 'anonymous';
-        img.addEventListener('load', () => {
-            let ratio = 1;
-            canvas.width = img.width;
-            canvas.height = img.height;
-            if (
-                img.width > mainContainer.clientWidth ||
-                img.height > mainContainer.clientHeight
-            ) {
-                const heightRatio = mainContainer.clientHeight / img.height;
-                const widthRatio = (mainContainer.clientWidth - 20) / img.width;
-                ratio = heightRatio < widthRatio ? heightRatio : widthRatio;
-                canvas.width = img.width * ratio;
-                canvas.height = img.height * ratio;
-            }
-            context.scale(ratio, ratio);
-            context.drawImage(img, 0, 0);
-            this.loaded.emit(true);
-        });
+        img.addEventListener('load', () => {});
         img.addEventListener('error', errorDetails => {
             console.error('error occured ! ', errorDetails);
             this.fg.get('link').setErrors({
