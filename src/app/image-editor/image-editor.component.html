@@ -1,0 +1,31 @@
+<app-toolbar
+    fxFlex="1 0 auto"
+    class="full-width"
+    (toggleCrop)="onToggleCrop()"
+    (rotate)="onRotate($event)"
+    (saveFile)="onSaveFile($event)"
+    (zoom)="onZoom($event)"
+    (resetZoom)="onResetZoom()"
+    (closeFile)="onCloseFile()"
+    (copyToClipboard)="onCopyToClipboard()"
+    [loading]="pictureLoading"
+></app-toolbar>
+<div
+    class="container"
+    fxFlex="5 0 auto"
+    fxLayout="column"
+    fxLayoutAlign="center stretch"
+>
+    <img id="picture" #picture />
+</div>
+<button
+    *ngIf="cropping"
+    (click)="onCrop()"
+    id="confirm-crop"
+    mat-raised-button
+    fxFlex="1 0 auto"
+    fxFlexAlign="center"
+>
+    <mat-icon>crop</mat-icon> Rogner
+</button>
+<a id="download-anchor" #downloadAnchor href="" download="untitled"></a>

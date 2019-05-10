@@ -1,52 +1,90 @@
-<mat-toolbar
-    fxLayout="row"
-    fxLayoutAlign="space-between center"
-    fxLayoutGap="1em"
->
-    <div fxLayout="row" fxLayoutAlign="space-evenly center" fxLayoutGap="1em">
-        <button
-            mat-raised-button
-            color="primary"
-            (click)="rotateLeft()"
-            matTooltip="Retourner vers la gauche (90°)"
-            [disabled]="loading"
+<mat-divider></mat-divider>
+<mat-toolbar role="heading">
+    <mat-toolbar-row
+        fxLayout="row"
+        fxLayoutAlign="space-between center"
+        fxLayoutGap="1em"
+        fxLayoutGap.lt-sm="1px"
+    >
+        <span>
+            <mat-menu #toolbarMenu>
+                <button mat-menu-item (click)="clickClose()">
+                    <mat-icon>close</mat-icon> Fermer
+                </button>
+                <button mat-menu-item (click)="clickSave()">
+                    <mat-icon>save</mat-icon> Enregistrer
+                </button>
+                <!-- Disabled for now , Clipboard API experimental
+                <button mat-menu-item (click)="clickCopy()">
+                    <mat-icon>file_copy</mat-icon> Copier dans le presse-papiers
+                </button>
+                -->
+            </mat-menu>
+            <button mat-button [matMenuTriggerFor]="toolbarMenu">
+                Image
+            </button>
+        </span>
+        <span
+            fxLayout="row"
+            fxLayoutAlign="center center"
+            fxLayoutGap="1em"
+            fxLayoutGap.lt-sm="1px"
         >
-            <mat-icon>rotate_left</mat-icon>
-        </button>
-        <button
-            mat-raised-button
-            color="primary"
-            (click)="rotateRight()"
-            matTooltip="Retourner vers la droite (90°)"
-            [disabled]="loading"
-        >
-            <mat-icon>rotate_right</mat-icon>
-        </button>
-        <button
-            mat-raised-button
-            color="primary"
-            (click)="toggleCropping()"
-            matTooltip="Découper"
-        >
-            <mat-icon>crop</mat-icon>
-        </button>
-    </div>
-    <div>
-        <mat-form-field floatLabel="never">
-            <input
-                matInput
-                type="text"
-                [(ngModel)]="filename"
-                placeholder="Nom du fichier"
-            />
-        </mat-form-field>
-        <button
-            mat-raised-button
-            color="primary"
-            (click)="save()"
-            matTooltip="Enregistrer"
-        >
-            <mat-icon>save</mat-icon>
-        </button>
-    </div>
+            <button
+                mat-raised-button
+                color="primary"
+                (click)="clickZoomOut()"
+                matTooltip="Dézoomer"
+                [disabled]="loading"
+            >
+                <mat-icon>zoom_out</mat-icon>
+            </button>
+            <button
+                mat-raised-button
+                color="primary"
+                (click)="clickZoomIn()"
+                matTooltip="Zoomer"
+                [disabled]="loading"
+            >
+                <mat-icon>zoom_in</mat-icon>
+            </button>
+            <button
+                mat-raised-button
+                color="primary"
+                (click)="clickResetZoom()"
+                matTooltip="Revenir au zoom initial"
+                [disabled]="loading"
+            >
+                <mat-icon>pageview</mat-icon>
+            </button>
+            <button
+                mat-raised-button
+                color="primary"
+                (click)="rotateLeft()"
+                matTooltip="Retourner vers la gauche (90°)"
+                [disabled]="loading"
+            >
+                <mat-icon>rotate_left</mat-icon>
+            </button>
+            <button
+                mat-raised-button
+                color="primary"
+                (click)="rotateRight()"
+                matTooltip="Retourner vers la droite (90°)"
+                [disabled]="loading"
+            >
+                <mat-icon>rotate_right</mat-icon>
+            </button>
+            <button
+                mat-raised-button
+                color="primary"
+                (click)="toggleCropping()"
+                matTooltip="Découper"
+            >
+                <mat-icon>crop</mat-icon>
+            </button>
+        </span>
+        <span></span>
+    </mat-toolbar-row>
 </mat-toolbar>
+<mat-divider></mat-divider>
