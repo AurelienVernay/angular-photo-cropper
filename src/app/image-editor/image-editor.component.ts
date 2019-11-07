@@ -49,8 +49,10 @@ export class ImageEditorComponent implements OnInit, OnDestroy {
         movable: true,
         background: false,
         toggleDragModeOnDblclick: false,
-        width: 800,
         ready: () => this._ready.next(true),
+        zoom: eventDetail => {
+            console.log(eventDetail);
+        },
     };
 
     public cropper: Cropper;

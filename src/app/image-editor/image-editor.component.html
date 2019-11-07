@@ -9,13 +9,8 @@
     (closeFile)="onCloseFile()"
     (copyToClipboard)="onCopyToClipboard()"
 ></app-toolbar>
-<div
-    class="container"
-    fxFlex="5 0 auto"
-    fxLayout="column"
-    fxLayoutAlign="center stretch"
->
-    <img id="picture" #picture />
+<div class="container" fxFlex="5 0 auto">
+    <img id="picture" #picture contenteditable="true" />
 </div>
 <button
     *ngIf="cropping"
